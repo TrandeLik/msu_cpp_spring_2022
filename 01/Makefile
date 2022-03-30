@@ -2,8 +2,8 @@ CC=g++
 FLAGS=-std=c++2a -Wall -Werror -fsanitize=undefined,address
 TESTING_FLAGS=-lgtest_main -lgtest -lpthread
 
-all: allocator.h
-		$(CC) $(FLAGS) allocator.h -o allocator
+all: allocator.cpp
+		$(CC) $(FLAGS) allocator.cpp -o allocator
 test: test_file
 		./test_file
 test_file: test_allocator.cpp
