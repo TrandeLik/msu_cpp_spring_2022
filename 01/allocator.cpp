@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "allocator.h"
+#include "allocator.hpp"
 
 int main() {
     std::string inp;

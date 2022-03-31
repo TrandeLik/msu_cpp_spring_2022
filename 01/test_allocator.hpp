@@ -1,5 +1,7 @@
+#pragma once
+
 #include <gtest/gtest.h>
-#include "allocator.h"
+#include "allocator.hpp"
 
 class TestAllocator : public ::testing::Test {
  protected:

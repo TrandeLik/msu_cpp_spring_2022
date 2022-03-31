@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstddef>
 
 class Allocator {
@@ -15,12 +17,13 @@ class Allocator {
         if (memory != nullptr) {
             delete[] memory;
         }
+        offset = 0;
         max_size = maximal_size;
         memory = new char[max_size];
     }
 
     char* alloc(size_t size) {
-        if (size > 0 && offset + size < max_size) {
+        if (size > 0 && offset + size <= max_size) {
             offset += size;
             return memory + offset - size;
         }
