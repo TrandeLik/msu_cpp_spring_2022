@@ -6,11 +6,25 @@
 #include <string>
 
 class TokenParser {
+ public:
+    using void_f = std::function<int(void)>;
+    using str_f = std::function<int(const std::string&)>;
+    using digit_f = std::function<int(uint64_t)>;
+
+    static bool only_digits(const std::string& x) {
+        for (auto a: x) {
+            if (a - '0' < 0 || a - '0' > 9) {
+                return false;
+            }
+        }
+        return true;
+    }
+
  private:
-    std::function<int(void)> start_callback;
-    std::function<int(const std::string &)> string_callback;
-    std::function<int(uint64_t)> digit_callback;
-    std::function<int(void)> end_callback;
+    void_f start_callback;
+    str_f string_callback;
+    digit_f digit_callback;
+    void_f end_callback;
 
  public:
     int start_counter = 0;
@@ -18,46 +32,21 @@ class TokenParser {
     int digit_counter = 0;
     int string_counter = 0;
 
-    void SetStartCallback(const std::function<int(void)>& f) {
+    void SetStartCallback(const void_f& f) {
         start_callback = f;
     }
 
-    void SetEndCallback(const std::function<int(void)>& f) {
+    void SetEndCallback(const void_f& f) {
         end_callback = f;
     }
 
-    void SetDigitTokenCallback(const std::function<int(uint64_t)>& f) {
+    void SetDigitTokenCallback(const digit_f& f) {
         digit_callback = f;
     }
 
-    void SetStringTokenCallback(const std::function<int(const std::string &)>& f) {
+    void SetStringTokenCallback(const str_f& f) {
         string_callback = f;
     }
 
-    void Parse(const std::string& s) {
-        std::stringstream input(s);
-        if (start_callback) {
-            ++start_counter;
-            start_callback();
-        }
-        std::string token;
-        while (input >> token) {
-            try {
-                uint64_t x = std::stoull(token);
-                if (digit_callback) {
-                    ++digit_counter;
-                    digit_callback(x);
-                }
-            } catch (std::exception const&) {
-                if (string_callback) {
-                    ++string_counter;
-                    string_callback(token);
-                }
-            }
-        }
-        if (end_callback) {
-            ++end_counter;
-            end_callback();
-        }
-    }
+    void Parse(const std::string& s);
 };

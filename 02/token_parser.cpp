@@ -1,27 +1,31 @@
-#include <iostream>
-#include <functional>
 #include "token_parser.hpp"
 
-int main() {
-    TokenParser parser;
-    std::string line;
-    parser.SetStartCallback([]() {
-        std::cout << "Start\n";
-        return 0;
-    });
-    parser.SetEndCallback([]() {
-        std::cout << "End\n";
-        return 0;
-    });
-    parser.SetStringTokenCallback([](std::string a) {
-        std::cout << "String " << a << '\n';
-        return 0;
-    });
-    parser.SetDigitTokenCallback([](uint64_t a) {
-        std::cout << "Digit " << a << '\n';
-        return 0;
-    });
-    while (std::getline(std::cin, line)) {
-        parser.Parse(line);
+void TokenParser::Parse(const std::string &s) {
+    std::stringstream input(s);
+    if (start_callback) {
+        ++start_counter;
+        start_callback();
+    }
+    std::string token;
+    while (input >> token) {
+        try {
+            if (!only_digits(token)) {
+                throw std::exception();
+            }
+            uint64_t x = std::stoull(token);
+            if (digit_callback) {
+                ++digit_counter;
+                digit_callback(x);
+            }
+        } catch (std::exception const&) {
+            if (string_callback) {
+                ++string_counter;
+                string_callback(token);
+            }
+        }
+    }
+    if (end_callback) {
+        ++end_counter;
+        end_callback();
     }
 }
