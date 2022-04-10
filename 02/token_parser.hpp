@@ -7,9 +7,9 @@
 
 class TokenParser {
  public:
-    using void_f = std::function<int(void)>;
-    using str_f = std::function<int(const std::string&)>;
-    using digit_f = std::function<int(uint64_t)>;
+    using void_f = std::function<void(void)>;
+    using str_f = std::function<void(const std::string&)>;
+    using digit_f = std::function<void(uint64_t)>;
 
     static bool only_digits(const std::string& x) {
         for (auto a: x) {
@@ -27,11 +27,6 @@ class TokenParser {
     void_f end_callback;
 
  public:
-    int start_counter = 0;
-    int end_counter = 0;
-    int digit_counter = 0;
-    int string_counter = 0;
-
     void SetStartCallback(const void_f& f) {
         start_callback = f;
     }
