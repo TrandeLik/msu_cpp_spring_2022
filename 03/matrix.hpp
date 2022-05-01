@@ -43,6 +43,7 @@ class Matrix {
     friend std::ostream& operator<<(std::ostream& out, const Matrix& m);
     friend std::ostream& operator<<(std::ostream& out, const ProxyRow& r);
     friend Matrix::ProxyRow operator+(const Matrix::ProxyRow& r1, const Matrix::ProxyRow& r2);
-    friend Matrix operator+(const Matrix& m1, const Matrix& m2);
     ~Matrix();
 };
+
+Matrix operator+(const Matrix& m1, const Matrix& m2);

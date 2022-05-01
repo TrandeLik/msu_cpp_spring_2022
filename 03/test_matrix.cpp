@@ -70,6 +70,14 @@ TEST_F(TestMatrix, incorrect_assignment) {
     ASSERT_THROW(m[10][0], std::out_of_range);
     ASSERT_THROW(m[0][10], std::out_of_range);
     ASSERT_THROW(m[10][10], std::out_of_range);
+    ASSERT_THROW(m[-1][3], std::out_of_range);
+    ASSERT_THROW(m[2][-1], std::out_of_range);
+    ASSERT_THROW(m[3][3], std::out_of_range);
+    ASSERT_THROW(m[2][4], std::out_of_range);
+    ASSERT_THROW(m[3][4], std::out_of_range);
+    ASSERT_THROW(m[-1][-1], std::out_of_range);
+    ASSERT_THROW(m[-1][4], std::out_of_range);
+    ASSERT_THROW(m[3][-1], std::out_of_range);
 }
 
 TEST_F(TestMatrix, multiply) {
@@ -151,4 +159,43 @@ TEST_F(TestMatrix, multiple_operations) {
     std::stringstream s;
     s << m3;
     ASSERT_EQ("10000 -14 -21 \n-14 -28 -42 \n-21 -42 -63 \n", s.str());
+}
+
+TEST_F(TestMatrix, number) {
+    Matrix m1 = fill_square_matrix(1);
+    Matrix m2 = fill_square_matrix(1);
+    m2[0][0] = 3;
+    ASSERT_TRUE(m1 != m2);
+    ASSERT_EQ(m2, m1 + m1 + m1);
+    m1 *= 3;
+    ASSERT_EQ(m2, m1);
+    ASSERT_TRUE(m1 == m2);
+    ASSERT_EQ(1, m1.get_cols());
+    ASSERT_EQ(1, m1.get_rows());
+}
+
+TEST_F(TestMatrix, vector) {
+    Matrix m1 = fill_rectangle_matrix(10, 1);
+    Matrix m2 = fill_rectangle_matrix(10, 1);
+    m2 *= 3;
+    ASSERT_TRUE(m1 != m2);
+    ASSERT_EQ(m2, m1 + m1 + m1);
+    m1 *= 3;
+    ASSERT_EQ(m2, m1);
+    ASSERT_TRUE(m1 == m2);
+    ASSERT_EQ(1, m1.get_cols());
+    ASSERT_EQ(10, m1.get_rows());
+}
+
+TEST_F(TestMatrix, transposed_vector) {
+    Matrix m1 = fill_rectangle_matrix(1, 10);
+    Matrix m2 = fill_rectangle_matrix(1, 10);
+    m2 *= 3;
+    ASSERT_TRUE(m1 != m2);
+    ASSERT_EQ(m2, m1 + m1 + m1);
+    m1 *= 3;
+    ASSERT_EQ(m2, m1);
+    ASSERT_TRUE(m1 == m2);
+    ASSERT_EQ(10, m1.get_cols());
+    ASSERT_EQ(1, m1.get_rows());
 }
