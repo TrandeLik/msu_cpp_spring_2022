@@ -3,6 +3,11 @@
 #include <string>
 #include <set>
 
+class format_error: public std::logic_error {
+ public:
+    explicit format_error(const std::string& s) : std::logic_error(s) {}
+};
+
 class Format {
  private:
     std::string s;
@@ -16,6 +21,8 @@ class Format {
 
     template<typename Head, typename... Tail>
     void write(const Head& h, const Tail&... tail);
+
+    void write() {}
 
     operator std::string () {
         return s;
@@ -32,37 +39,43 @@ std::string format(const std::string& s, const Args&... a) {
 
 bool Format::check_format(const std::string& f, size_t size) {
     bool is_number = false;
+    bool was_number = false;
     size_t number = 0;
     std::set<size_t> numbers;
     for (auto c : f) {
         if (is_number) {
             if (c >= '0' && c <= '9') {
+                was_number = true;
                 number *= 10;
                 number += c - '0';
             } else if (c == '}') {
+                if (!was_number) {
+                    throw format_error("Empty brackets");
+                }
                 numbers.insert(number);
                 number = 0;
+                was_number = false;
                 is_number = false;
             } else {
-                return false;
+                throw format_error("Not a number after open bracket");
             }
         } else {
             if (c == '}') {
-                return false;
+                throw format_error("Single }");
             } else if (c == '{') {
                 is_number = true;
             }
         }
     }
     if (is_number) {
-        return false;
+        throw format_error("Not finished brackets");
     }
     for (auto& n : numbers) {
         if (n < 0 || n >= size) {
-            return false;
+            throw format_error("Incorrect arg position");
         }
     }
-    return numbers.size() <= size;
+    return numbers.size() == size;
 }
 
 Format::Format(const std::string& f, size_t size) {
@@ -70,7 +83,7 @@ Format::Format(const std::string& f, size_t size) {
     if (check_format(f, size)) {
         s = f;
     } else {
-        throw std::runtime_error("Incorrect format string for given args");
+        throw format_error("Incorrect elements count");
     }
 }
 
