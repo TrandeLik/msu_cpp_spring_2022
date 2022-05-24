@@ -3,15 +3,16 @@
 #include "error.hpp"
 
 class Serializer {
-  private:
+ private:
     std::ostream& out_;
     template<typename Head, typename... Tail>
-    Error process(Head h, Tail... tail);
-    Error process(bool arg);
-    Error process(uint64_t arg);
+    Error process(const Head& h, const Tail&... tail);
+    Error process(const bool& arg);
+    Error process(const uint64_t& arg);
     template<typename T>
-    Error process(T t);
-  public:
+    Error process(const T& t);
+
+ public:
     explicit Serializer(std::ostream& out): out_(out) {}
 
     template <typename T>
@@ -20,14 +21,14 @@ class Serializer {
     }
 
     template <typename... ArgsT>
-    Error operator()(ArgsT... args) {
+    Error operator()(const ArgsT&... args) {
         return process(args...);
     }
 };
 
 
 template<typename Head, typename... Tail>
-Error Serializer::process(Head h, Tail... tail) {
+Error Serializer::process(const Head& h, const Tail&... tail) {
     auto err = process(h);
     if (err == Error::NoError) {
         out_ << ' ';
@@ -37,6 +38,6 @@ Error Serializer::process(Head h, Tail... tail) {
 }
 
 template<typename T>
-Error Serializer::process(T) {
+Error Serializer::process(const T&) {
     return Error::CorruptedArchive;
 }

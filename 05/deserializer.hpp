@@ -3,7 +3,7 @@
 #include "error.hpp"
 
 class Deserializer {
-private:
+ private:
     std::istream& in_;
     template<typename Head, typename... Tail>
     Error process(Head& h, Tail&... tail);
@@ -11,7 +11,8 @@ private:
     Error process(uint64_t& arg);
     template<typename T>
     Error process(T t);
-public:
+
+ public:
     explicit Deserializer(std::istream& in): in_(in) {}
 
     template <typename T>

@@ -2,7 +2,6 @@
 #include "deserializer.hpp"
 #include "serializer.hpp"
 
-
 Error Deserializer::process(bool& arg) {
     std::string data;
     in_ >> data;
@@ -21,13 +20,13 @@ Error Deserializer::process(uint64_t& arg) {
     in_ >> data;
     try {
         arg = std::stoull(data);
-    } catch (std::exception&){
+    } catch (std::exception&) {
         return Error::CorruptedArchive;
     }
     return Error::NoError;
 }
 
-Error Serializer::process(bool arg) {
+Error Serializer::process(const bool& arg) {
     if (arg) {
         out_ << "true";
     } else {
@@ -36,7 +35,7 @@ Error Serializer::process(bool arg) {
     return Error::NoError;
 }
 
-Error Serializer::process(uint64_t arg) {
+Error Serializer::process(const uint64_t& arg) {
     out_ << arg;
     return Error::NoError;
 }

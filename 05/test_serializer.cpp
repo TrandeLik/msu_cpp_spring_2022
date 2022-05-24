@@ -3,7 +3,7 @@
 #include "deserializer.hpp"
 
 class TestSerializer: public testing::Test {
-protected:
+ protected:
     void SetUp() {
     }
 
