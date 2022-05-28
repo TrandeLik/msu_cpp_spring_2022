@@ -3,9 +3,9 @@
 ThreadPool::ThreadPool(size_type n): size(n), is_running(true) {
     workers.resize(size);
     for (size_type i = 0; i < size; ++i) {
-        workers[i] = std::thread([this](){
+        workers[i] = std::move(std::thread([this](){
             worker_body();
-        });
+        }));
     }
 }
 
