@@ -1,6 +1,9 @@
-#include <gtest/gtest.h>
 #include <fstream>
 #include <thread>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include "sort.hpp"
 
 auto get_file_size(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary | std::ios::in);
@@ -116,7 +119,7 @@ std::string split_and_sort(const std::string& filename, std::size_t len, std::si
         start_pos = len / 2;
         end_pos = len;
     }
-    input.seekg(static_cast<long>(start_pos * sizeof(uint64_t)), std::ios::beg);
+    input.seekg(static_cast<int64_t>(start_pos * sizeof(uint64_t)), std::ios::beg);
     std::stringstream prefix;
     prefix << "pid-"<< pid;
     std::string out_name = prefix.str() + filename;

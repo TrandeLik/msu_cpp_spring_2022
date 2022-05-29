@@ -9,10 +9,8 @@ void fill_file(const std::string& filename, std::size_t size) {
     file.open(filename, std::ios::binary | std::ios::out);
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<uint64_t> dis(
-            std::numeric_limits<uint64_t>::min(),
-            std::numeric_limits<uint64_t>::max()
-    );
+    std::uniform_int_distribution<uint64_t> dis(std::numeric_limits<uint64_t>::min(),
+                                            std::numeric_limits<uint64_t>::max());
     for (std::size_t i = 0; i < size; ++i) {
         uint64_t tmp = dis(gen);
         file.write(reinterpret_cast<char*>(&tmp), sizeof(tmp));
